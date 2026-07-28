@@ -21,6 +21,9 @@ module framebuffer #(
     output logic [7:0] rd_data
 );
 
+        wire [15:0] addr_ext;
+        assign addr_ext = {{(16-ADDR_BITS){1'b0}}, addr};   //perche addr può non essere a 16 bit      
+
         Gowin_SP ram(
         .dout(rd_data), //output 
         .clk(clk), //input clk
@@ -28,7 +31,7 @@ module framebuffer #(
         .ce(1'b1), //input ce
         .reset(~rst_n), //input reset
         .wre(wr_en), //input wre
-        .ad(addr), //address
+        .ad(addr_ext), //address
         .din(wr_data) //input  
     );
 

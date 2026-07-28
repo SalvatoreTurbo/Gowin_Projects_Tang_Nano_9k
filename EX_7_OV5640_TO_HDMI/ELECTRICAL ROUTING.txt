@@ -1,0 +1,23 @@
+Adafruit OV5640     Tang Nano FPGA pin
+--------------------------------------
+PC                  35
+VS                  34
+HS                  40
+
+D2                  41
+D3                  42
+D4                  25
+D5                  26
+D6                  27
+D7                  28
+D8                  29
+D9                  30
+
+SCL                 36
+SDA                 37
+RT                  38
+PD                  39
+
+3V                  3.3 V
+G                   GND
+XC                  floating, XCLK jumper on INT

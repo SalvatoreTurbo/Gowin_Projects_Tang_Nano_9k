@@ -52,12 +52,16 @@ module framebuffer_video_pipeline #(
     localparam int SCALE_BITS = $clog2(SCALE);
 
     always_comb begin
-        // Upscaling 4x
-        fb_x = cx >> SCALE_BITS;
-        fb_y = cy >> SCALE_BITS;
+        fb_x    = '0;
+        fb_y    = '0;
+        fb_addr = '0;
 
-        fb_addr = (fb_y * FB_WIDTH) + fb_x;
-    end
+        if (vde) begin
+            fb_x    = cx >> SCALE_BITS;
+            fb_y    = cy >> SCALE_BITS;
+            fb_addr = (fb_y * FB_WIDTH) + fb_x;
+        end
+     end
 
     // =========================================================================
     // READ ONLY EVERY 4 PIXELS
@@ -91,10 +95,10 @@ module framebuffer_video_pipeline #(
 
     always_comb begin
         case ((frame_counter / 8'd60) & 2'b11)
-            2'b00: pattern_pixel = 8'b11100000; // RED
-            2'b01: pattern_pixel = 8'b00011100; // GREEN
-            2'b10: pattern_pixel = 8'b00000011; // BLUE
-            2'b11: pattern_pixel = 8'b11111111; // WHITE
+            2'b00: pattern_pixel   = 8'b11100000; // RED
+            2'b01: pattern_pixel   = 8'b00011100; // GREEN
+            2'b10: pattern_pixel   = 8'b00000011; // BLUE
+            2'b11: pattern_pixel   = 8'b11111111; // WHITE
             default: pattern_pixel = 8'b00000000;
         endcase
     end

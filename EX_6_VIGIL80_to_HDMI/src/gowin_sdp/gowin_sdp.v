@@ -6,7 +6,7 @@
 //Part Number: GW1NR-LV9QN88PC6/I5
 //Device: GW1NR-9
 //Device Version: C
-//Created Time: Sun Jul  5 20:17:51 2026
+//Created Time: Fri Aug  7 17:39:47 2026
 
 module Gowin_SDP (dout, clka, cea, reseta, clkb, ceb, resetb, oce, ada, din, adb);
 

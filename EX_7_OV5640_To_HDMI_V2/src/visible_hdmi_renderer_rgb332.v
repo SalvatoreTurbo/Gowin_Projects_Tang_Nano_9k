@@ -19,7 +19,7 @@ module visible_hdmi_renderer_rgb332 #(
 
     parameter int IMG_W     = 160,
     parameter int IMG_H     = 120,
-    parameter int SCALE     = 4,   //Each pixel in the camera will be replicated 6 times vertically and 6 times horizontally
+    parameter int SCALE     = 4,   //Each pixel in the camera will be replicated 4 times vertically and 4 times horizontally
 
     parameter int FRAME_PIX = IMG_W * IMG_H,
     parameter int ADDR_BITS = $clog2(FRAME_PIX)

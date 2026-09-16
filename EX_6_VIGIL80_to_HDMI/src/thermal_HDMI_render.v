@@ -158,9 +158,9 @@ endfunction
             in_image_area_d <= in_image_area;
 
             if (in_image_area_d && rd_valid) begin
-                //red   <= rd_pixel;
-                //green <= rd_pixel;
-                //blue  <= rd_pixel;
+//                red   <= rd_pixel;
+//                green <= rd_pixel;
+//                blue  <= rd_pixel;
                 {red, green, blue} <= thermal_palette(rd_pixel);
             end 
             else begin  //out of image : black

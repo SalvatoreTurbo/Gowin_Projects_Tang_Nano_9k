@@ -1,3 +1,4 @@
+
 // ============================================================================
 // HDMI TMDS OUTPUTS (The Tang Nano 9K uses ELVDS / LVCMOS33D)
 // ============================================================================
@@ -40,4 +41,12 @@ IO_PORT "vigil_csb" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
 IO_LOC  "vigil_mosi" 37;
 IO_PORT "vigil_mosi" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+// ============================================================================
+// DEBUG LED0
+// Onboard LED is active low
+// ============================================================================
+
+IO_LOC  "debug_led" 10;
+IO_PORT "debug_led" IO_TYPE=LVCMOS18 PULL_MODE=NONE DRIVE=4;
 

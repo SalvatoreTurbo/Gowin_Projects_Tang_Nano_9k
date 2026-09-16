@@ -29,7 +29,7 @@ module vigil80_ir_manager #(
     // Thermal conversion parameters
     // TEMP_MIN = 27315 means about 0 degC in Kelvin x100
     parameter int TEMP_MIN      = 16'd27315,   //Minimum Temp used as reference for conversion
-    parameter int TEMP_SHIFT    = 5
+    parameter int unsigned TEMP_SHIFT    = 5
 )(
     input  logic rst_n,
 

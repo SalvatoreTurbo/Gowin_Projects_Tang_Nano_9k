@@ -26,7 +26,11 @@ module hdmi_top #(
 
     // Needed bits to correct count pixels
     parameter int H_BITS = $clog2(H_TOTAL),
-    parameter int V_BITS = $clog2(V_TOTAL)
+    parameter int V_BITS = $clog2(V_TOTAL),
+
+    //Thermal parameters for conversion
+    parameter int TEMP_MIN   = 16'd27315,
+    parameter int unsigned TEMP_SHIFT = 6
 )(
     input  logic rst_n,       // Asynchronous reset active low
     input  logic clk_27MHz,   // Board clock
@@ -41,8 +45,16 @@ module hdmi_top #(
     output logic tmds_clk_p,  output logic tmds_clk_n,
     output logic tmds_d0_p,   output logic tmds_d0_n,  // Blue
     output logic tmds_d1_p,   output logic tmds_d1_n,  // Green
-    output logic tmds_d2_p,   output logic tmds_d2_n   // Red
+    output logic tmds_d2_p,   output logic tmds_d2_n,   // Red
+
+    // ========================================================================
+    // Debug output
+    // ========================================================================
+
+    output logic debug_led
 );
+
+    assign debug_led = ~(ir_frame_available);
 
     // --- Internal signals ---
     logic clk_pixel;          // Pixel_clk
@@ -123,8 +135,8 @@ vigil80_ir_manager #(
     .TOTAL_WORDS   (6423),
     .ADDR_BITS     (13),
 
-    .TEMP_MIN      (16'd27315),
-    .TEMP_SHIFT    (5)
+    .TEMP_MIN      (TEMP_MIN),
+    .TEMP_SHIFT    (TEMP_SHIFT)
 ) vigil80_manager_inst (
     .rst_n          (rst_n),
 

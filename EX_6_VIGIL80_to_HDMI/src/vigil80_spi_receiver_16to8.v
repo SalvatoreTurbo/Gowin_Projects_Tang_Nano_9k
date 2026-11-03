@@ -24,8 +24,8 @@ module vigil80_spi_receiver_16to8 #(
     parameter int TOTAL_WORDS  = FRAME_PIX + FOOTER_WORDS,
     parameter int ADDR_BITS    = $clog2(FRAME_PIX),
 
-    parameter int TEMP_MIN     = 16'd27315,   //Minimum thermal value used as reference for the conversion
-    parameter int unsigned TEMP_SHIFT   = 5
+    parameter int TEMP_MIN     = 16'd28672,   //Minimum thermal value used as reference for the conversion
+    parameter int unsigned TEMP_SHIFT   = 4
 )(
     input  logic rst_n,
 
@@ -66,7 +66,6 @@ module vigil80_spi_receiver_16to8 #(
 
 function automatic logic [7:0] thermal16_to_gray8(
     input logic [15:0] thermal
-    input logic [15:0] vtemp
 );
 
     logic [15:0] diff;
@@ -74,25 +73,18 @@ function automatic logic [7:0] thermal16_to_gray8(
 
     begin
 
-        if (thermal <= 16'd25000) begin
-
+        if (thermal <= TEMP_MIN) begin
             thermal16_to_gray8 = 8'd0;
-
         end
-
         else begin
-
-            diff = thermal - 16'd25000;
-
-            scaled = diff >> 2;
+            diff = thermal - TEMP_MIN;
+            scaled = diff >> TEMP_SHIFT;
 
             if (scaled >= 16'd255)
                 thermal16_to_gray8 = 8'd255;
             else
                 thermal16_to_gray8 = scaled[7:0];
-
         end
-
     end
 
 endfunction
@@ -187,7 +179,7 @@ endfunction
                             pix_addr <= word_cnt[ADDR_BITS-1:0];   //save the received pixel at the address corresponding to the number of the received word
 
                             // Must use concatenation because `shift_reg` would be updated at the end of the loop
-                            pix_data <= thermal16_to_gray8(completed_word, vtemp_reg);
+                            pix_data <= thermal16_to_gray8(completed_word);
                             //pix_data <= completed_word[7:0];
                             //pix_data <= (completed_word > 16'd25000) ? 8'd255 : 8'd0;
                         end

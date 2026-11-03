@@ -40,7 +40,7 @@ module image_fusion_top #(
     // 11 = fused image
     // ========================================================================
 
-    parameter bit DEBUG_SOURCE = 1'b1,
+    parameter bit DEBUG_SOURCE = 1'b0,
 
     // Horizontal parameters (Pixel)
     // | ACTIVE | FRONT | SYNC | BACK |

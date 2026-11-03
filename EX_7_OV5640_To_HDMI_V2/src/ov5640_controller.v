@@ -469,33 +469,40 @@ always_comb begin
         9'd347: rom_entry = {16'h4603, 8'hA0}; // VFIFO width 160
         9'd348: rom_entry = {16'h4604, 8'h00}; // VFIFO height 120
         9'd349: rom_entry = {16'h4605, 8'h78}; // VFIFO height 120
-        9'd350: rom_entry = {16'h3212, 8'h03}; // start group 3
-        9'd351: rom_entry = {16'h5581, 8'h1C}; // neutral saturation
-        9'd352: rom_entry = {16'h5582, 8'h5A}; // neutral saturation
-        9'd353: rom_entry = {16'h5583, 8'h06}; // neutral saturation
-        9'd354: rom_entry = {16'h5584, 8'h15};
-        9'd355: rom_entry = {16'h5585, 8'h52};
-        9'd356: rom_entry = {16'h5586, 8'h66};
-        9'd357: rom_entry = {16'h5587, 8'h68};
-        9'd358: rom_entry = {16'h5588, 8'h66};
-        9'd359: rom_entry = {16'h5589, 8'h02};
-        9'd360: rom_entry = {16'h558B, 8'h98}; // neutral saturation
-        9'd361: rom_entry = {16'h558A, 8'h01}; // neutral saturation
+        9'd350: rom_entry = {16'h3212, 8'h03}; // start group 3: colour matrix (saturation 0, OmniVision AN)
+        9'd351: rom_entry = {16'h5381, 8'h1C}; // CMX1  (was written to 0x5581 by mistake)
+        9'd352: rom_entry = {16'h5382, 8'h5A}; // CMX2
+        9'd353: rom_entry = {16'h5383, 8'h06}; // CMX3
+        9'd354: rom_entry = {16'h5384, 8'h15}; // CMX4
+        9'd355: rom_entry = {16'h5385, 8'h52}; // CMX5
+        9'd356: rom_entry = {16'h5386, 8'h66}; // CMX6
+        9'd357: rom_entry = {16'h5387, 8'h68}; // CMX7
+        9'd358: rom_entry = {16'h5388, 8'h66}; // CMX8
+        9'd359: rom_entry = {16'h5389, 8'h02}; // CMX9
+        9'd360: rom_entry = {16'h538B, 8'h98}; // CMX sign
+        9'd361: rom_entry = {16'h538A, 8'h01}; // CMX sign
         9'd362: rom_entry = {16'h3212, 8'h13}; // end group 3
         9'd363: rom_entry = {16'h3212, 8'hA3}; // launch group 3
-        9'd364: rom_entry = {16'h3212, 8'h03}; // start normal-effect group
-        9'd365: rom_entry = {16'h5580, 8'h06}; // normal effect
-        9'd366: rom_entry = {16'h5583, 8'h40}; // normal effect
-        9'd367: rom_entry = {16'h5584, 8'h15}; // normal effect
-        9'd368: rom_entry = {16'h5003, 8'h08}; // normal effect
-        9'd369: rom_entry = {16'h3212, 8'h13}; // end normal-effect group
-        9'd370: rom_entry = {16'h3212, 8'hA3}; // launch normal-effect group
-        9'd371: rom_entry = {16'h3406, 8'h00}; // automatic white balance
-        9'd372: rom_entry = {16'h3503, 8'h00}; // automatic exposure and gain
-        9'd373: rom_entry = {16'h503D, 8'h00}; // test pattern off
-        9'd374: rom_entry = {16'h3008, 8'h02}; // streaming on
-        9'd375: rom_entry = {ROM_DELAY, 8'h00}; // 10 ms
-        9'd376: rom_entry = {ROM_END, 8'hFF}; // end
+        9'd364: rom_entry = {16'h3212, 8'h03}; // start group 3: SDE neutral (normal effect, contrast 0, brightness 0)
+        9'd365: rom_entry = {16'h5580, 8'h06}; // SDE: saturation + contrast enabled, hue off
+        9'd366: rom_entry = {16'h5583, 8'h40}; // saturation U = 1.0
+        9'd367: rom_entry = {16'h5584, 8'h40}; // saturation V = 1.0 (same as U: no colour bias)
+        9'd368: rom_entry = {16'h5585, 8'h00}; // contrast Y offset = 0 (was 0x52)
+        9'd369: rom_entry = {16'h5586, 8'h20}; // contrast gain neutral (was 0x66 = about 3x)
+        9'd370: rom_entry = {16'h5587, 8'h00}; // brightness 0 (was 0x68)
+        9'd371: rom_entry = {16'h5588, 8'h01}; // brightness/hue sign bits default (was 0x66)
+        9'd372: rom_entry = {16'h5589, 8'h10}; // UV adjust threshold 1 (OpenMV default, was 0x02)
+        9'd373: rom_entry = {16'h558A, 8'h00}; // UV adjust threshold 2 (OpenMV default, was 0x01)
+        9'd374: rom_entry = {16'h558B, 8'hF8}; // UV adjust (OpenMV default, was 0x98)
+        9'd375: rom_entry = {16'h5003, 8'h08}; // special effects off
+        9'd376: rom_entry = {16'h3212, 8'h13}; // end group 3
+        9'd377: rom_entry = {16'h3212, 8'hA3}; // launch group 3
+        9'd378: rom_entry = {16'h3406, 8'h00}; // automatic white balance
+        9'd379: rom_entry = {16'h3503, 8'h00}; // automatic exposure and gain
+        9'd380: rom_entry = {16'h503D, 8'h00}; // test pattern off
+        9'd381: rom_entry = {16'h3008, 8'h02}; // streaming on
+        9'd382: rom_entry = {ROM_DELAY, 8'h00}; // 10 ms
+        9'd383: rom_entry = {ROM_END, 8'hFF}; // end
         default: rom_entry = {ROM_END, 8'hFF};
     endcase
 end

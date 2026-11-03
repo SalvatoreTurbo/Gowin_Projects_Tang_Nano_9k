@@ -1,0 +1,138 @@
+// ============================================================================
+// Tang Nano 9K constraints
+// HDMI output + Adafruit OV5640 parallel camera breakout
+//
+// Camera configuration:
+// - 3.3 V interface
+// - 8-bit parallel DVP bus
+// - Internal 24 MHz XCLK selected on the Adafruit breakout
+// - XC is therefore not connected to the FPGA
+// ============================================================================
+
+
+// ============================================================================
+// HDMI TMDS OUTPUTS
+// ============================================================================
+
+IO_LOC  "tmds_d0_p" 71, 70;
+IO_PORT "tmds_d0_p" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8;
+
+IO_LOC  "tmds_d1_p" 73, 72;
+IO_PORT "tmds_d1_p" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8;
+
+IO_LOC  "tmds_d2_p" 75, 74;
+IO_PORT "tmds_d2_p" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8;
+
+IO_LOC  "tmds_clk_p" 69, 68;
+IO_PORT "tmds_clk_p" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8;
+
+
+// ============================================================================
+// RESET BUTTON
+// ============================================================================
+
+IO_LOC  "rst_n" 3;
+IO_PORT "rst_n" IO_TYPE=LVCMOS18 PULL_MODE=UP;
+
+
+// ============================================================================
+// INPUT CLOCK 27 MHz
+// ============================================================================
+
+IO_LOC  "clk_27MHz" 52;
+IO_PORT "clk_27MHz" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+
+// ============================================================================
+// ADAFRUIT OV5640 DVP SYNCHRONIZATION SIGNALS
+// ============================================================================
+
+// Adafruit PC: camera pixel clock
+IO_LOC  "ov_pclk" 35;
+IO_PORT "ov_pclk" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+// Adafruit VS: vertical/frame synchronization
+IO_LOC  "ov_vsync" 34;
+IO_PORT "ov_vsync" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+// Adafruit HS: horizontal reference / valid line
+IO_LOC  "ov_href" 40;
+IO_PORT "ov_href" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+
+// ============================================================================
+// OV5640 8-BIT PARALLEL DATA BUS
+//
+// Adafruit breakout exposes camera data outputs D2 through D9.
+// They are mapped in ascending order to ov_data[0] through ov_data[7].
+// ============================================================================
+
+IO_LOC  "ov_data[0]" 41;   // Adafruit D2
+IO_PORT "ov_data[0]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_data[1]" 42;   // Adafruit D3
+IO_PORT "ov_data[1]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_data[2]" 25;   // Adafruit D4
+IO_PORT "ov_data[2]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_data[3]" 26;   // Adafruit D5
+IO_PORT "ov_data[3]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_data[4]" 27;   // Adafruit D6
+IO_PORT "ov_data[4]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_data[5]" 28;   // Adafruit D7
+IO_PORT "ov_data[5]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_data[6]" 29;   // Adafruit D8
+IO_PORT "ov_data[6]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_data[7]" 30;   // Adafruit D9
+IO_PORT "ov_data[7]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+
+// ============================================================================
+// OV5640 SCCB / I2C CONTROL INTERFACE
+//
+// The Adafruit breakout has external pull-up resistors.
+// The SystemVerilog SCCB master drives these ports as open-drain.
+// ============================================================================
+
+IO_LOC  "ov_scl" 36;
+IO_PORT "ov_scl" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+IO_LOC  "ov_sda" 37;
+IO_PORT "ov_sda" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
+
+
+// ============================================================================
+// OV5640 RESET AND POWER-DOWN
+//
+// RT -> ov_reset_n: active low
+// PD -> ov_pwdn:    active high
+// ============================================================================
+
+IO_LOC  "ov_reset_n" 38;
+IO_PORT "ov_reset_n" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8;
+
+IO_LOC  "ov_pwdn" 39;
+IO_PORT "ov_pwdn" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8;
+
+
+// ============================================================================
+// XCLK
+// ============================================================================
+//
+// Move the Adafruit breakout XCLK jumper from EXT to INT.
+// The onboard oscillator will provide the 24 MHz clock.
+// Leave the breakout XC pin disconnected.
+
+
+// ============================================================================
+// DEBUG LED0
+// Onboard LED is active low
+// ============================================================================
+
+IO_LOC  "debug_led" 10;
+IO_PORT "debug_led" IO_TYPE=LVCMOS18 PULL_MODE=NONE DRIVE=4;

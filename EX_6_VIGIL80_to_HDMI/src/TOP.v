@@ -29,8 +29,8 @@ module hdmi_top #(
     parameter int V_BITS = $clog2(V_TOTAL),
 
     //Thermal parameters for conversion
-    parameter int TEMP_MIN   = 16'd27315,
-    parameter int unsigned TEMP_SHIFT = 6
+    parameter int TEMP_MIN   = 16'd26250,
+    parameter int unsigned TEMP_SHIFT = 2
 )(
     input  logic rst_n,       // Asynchronous reset active low
     input  logic clk_27MHz,   // Board clock

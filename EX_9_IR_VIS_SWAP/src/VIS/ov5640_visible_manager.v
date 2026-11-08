@@ -4,14 +4,12 @@
 //
 // The module:
 // - initializes the OV5640 through SCCB/I2C;
-// - receives the DVP RGB565 video stream;
-// - converts RGB565 to RGB332;
+// - receives the DVP video stream, YUV422 (Y8 stored) or RGB565 (RGB332 stored), selected by VIS_Y8;
 // - stores complete frames in a double framebuffer;
 // - provides a read interface to the HDMI renderer.
 //
 // Recommended initial camera configuration:
 // - 160x120
-// - RGB565
 // - internal 24 MHz XCLK on the Adafruit breakout
 // ============================================================================
 
@@ -19,7 +17,9 @@ module ov5640_visible_manager #(
     parameter int IMG_W      = 160,
     parameter int IMG_H      = 120,
     parameter int FRAME_PIX  = IMG_W * IMG_H,
-    parameter int ADDR_BITS  = $clog2(FRAME_PIX)
+    parameter int ADDR_BITS  = $clog2(FRAME_PIX),
+
+    parameter bit VIS_Y8     = 1'b1    // 1 = Y8 grayscale, 0 = RGB332 colour
 )(
     input  logic rst_n,          //global reset active low
     input  logic sys_clk,        //board clock (used during camera configuration)
@@ -50,7 +50,7 @@ module ov5640_visible_manager #(
     input  logic rd_req,                    //read request sent by renderer
     input  logic [ADDR_BITS-1:0] rd_addr,
 
-    output logic [7:0] rd_pixel,   //RGB332 pixel
+    output logic [7:0] rd_pixel,   //RGB332 or Y8 pixel
     output logic rd_valid,         //1 when the pixel is valid. Gowin RAM is synchronous, data is not available in the same cycle as the request
 
     // ========================================================================
@@ -77,7 +77,9 @@ module ov5640_visible_manager #(
     // OV5640 reset and SCCB initialization
     // =========================================================================
 
-    ov5640_controller ov5640_controller_inst (
+    ov5640_controller#(
+        .VIS_Y8 (VIS_Y8)
+    )ov5640_controller_inst (
         .clk               (sys_clk),
         .rst_n             (rst_n),
 
@@ -111,10 +113,10 @@ module ov5640_visible_manager #(
 
 
     // =========================================================================
-    // DVP RGB565 receiver
+    // DVP receiver (YUV422 -> Y8 or RGB565 -> RGB332)
     // =========================================================================
 
-    ov5640_dvp_rgb565_capture #(
+    ov5640_dvp_capture #(
         .IMG_W      (IMG_W),
         .IMG_H      (IMG_H),
         .FRAME_PIX  (FRAME_PIX),
@@ -123,7 +125,8 @@ module ov5640_visible_manager #(
         // Adafruit/CircuitPython names HS as HREF.
         // Polarity may be changed here if required by the selected register set.
         .VSYNC_ACTIVE(1'b1),
-        .HREF_ACTIVE (1'b1)
+        .HREF_ACTIVE (1'b1),
+        .VIS_Y8      (VIS_Y8)
     ) capture_inst (
         .rst_n             (rst_n),
         .capture_ready     (camera_initialized_pclk_sync),

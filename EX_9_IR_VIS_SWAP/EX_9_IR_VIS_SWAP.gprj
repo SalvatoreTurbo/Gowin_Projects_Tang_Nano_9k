@@ -15,14 +15,14 @@
         <File path="src/IR/vigil80_spi_receiver_16to8.v" type="file.verilog" enable="1"/>
         <File path="src/VIS/double_framebuffer_sdp_VIS.v" type="file.verilog" enable="1"/>
         <File path="src/VIS/ov5640_controller.v" type="file.verilog" enable="1"/>
-        <File path="src/VIS/ov5640_dvp_rgb565_capture.v" type="file.verilog" enable="1"/>
+        <File path="src/VIS/ov5640_dvp_capture.v" type="file.verilog" enable="1"/>
         <File path="src/VIS/ov5640_visible_manager.v" type="file.verilog" enable="1"/>
         <File path="src/VIS/sccb_write_master.v" type="file.verilog" enable="1"/>
-        <File path="src/VIS/visible_hdmi_renderer_rgb332.v" type="file.verilog" enable="1"/>
+        <File path="src/VIS/visible_hdmi_renderer.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_rpll/gowin_rpll.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_sdp/gowin_sdp_IR.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_sdp/gowin_sdp_VIS.v" type="file.verilog" enable="1"/>
-        <File path="src/image_fusion_top.v" type="file.verilog" enable="1"/>
+        <File path="src/image_fusion_swap_top.v" type="file.verilog" enable="1"/>
         <File path="src/Constraints.cst" type="file.cst" enable="1"/>
     </FileList>
 </Project>

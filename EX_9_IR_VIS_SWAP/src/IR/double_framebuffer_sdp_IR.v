@@ -1,8 +1,8 @@
 // ============================================================================
-// MODULE: double_framebuffer_gowin_sdp
-// DESCRIPTION: Double framebuffer using two Gowin_SDP RAM IPs.
+// MODULE: double_framebuffer_sdp_IR
+// DESCRIPTION: Double framebuffer stored in ONE double-depth Gowin_SDP_VIS RAM.
 //
-// RAM0 and RAM1 are used as ping-pong buffers.
+// The two halves of the RAM (bank 0 / bank 1) are used as ping-pong buffers.
 // The buffer swap is performed only at rd_swap_point.
 //
 // Write side:
@@ -27,7 +27,7 @@
 // - the current value identifies the framebuffer that has been completed..
 // ============================================================================
 module double_framebuffer_sdp_IR #(
-    parameter int FRAME_PIX = 160 * 120,
+    parameter int FRAME_PIX = 80 * 80,
     parameter int ADDR_BITS = $clog2(FRAME_PIX)
 )(
     input  logic rst_n,
@@ -68,19 +68,21 @@ module double_framebuffer_sdp_IR #(
 
     // ========================================================================
     // Bank control
+    // bank 0 = RAM addresses 0 ... FRAME_PIX-1
+    // bank 1 = RAM addresses FRAME_PIX ... 2*FRAME_PIX-1
     // ========================================================================
 
     logic wr_bank; // Buffer currently written by the camera:
-                   // 0: write RAM0
-                   // 1: write RAM1
+                   // 0: write bank 0
+                   // 1: write bank 1
 
     logic rd_bank; // Buffer currently read by HDMI:
-                   // 0: read RAM0
-                   // 1: read RAM1
+                   // 0: read bank 0
+                   // 1: read bank 1
 
     // At reset:
-    // - HDMI reads RAM0;
-    // - camera writes RAM1.
+    // - HDMI reads bank 0;
+    // - camera writes bank 1.
     //
     // This avoids a read/write collision immediately after reset.
 
@@ -90,8 +92,8 @@ module double_framebuffer_sdp_IR #(
     // 1. a change in its value signals a newly completed frame;
     // 2. its value identifies the completed framebuffer.
     //
-    // RAM1 complete -> completed_toggle_wr = 1
-    // RAM0 complete -> completed_toggle_wr = 0
+    // bank 1 complete -> completed_toggle_wr = 1
+    // bank 0 complete -> completed_toggle_wr = 0
 
     logic completed_toggle_wr;
 
@@ -146,7 +148,7 @@ module double_framebuffer_sdp_IR #(
 
     always_ff @(posedge wr_clk or negedge rst_n) begin
         if (!rst_n) begin
-            wr_bank             <= 1'b1; // After reset, write RAM1
+            wr_bank             <= 1'b1; // After reset, write bank 1
             completed_toggle_wr <= 1'b0;
         end
         else if (wr_frame_done && wr_allow) begin
@@ -201,7 +203,7 @@ module double_framebuffer_sdp_IR #(
             pending_valid_rd <= 1'b0;
             pending_bank_rd  <= 1'b0;
 
-            rd_bank         <= 1'b0; // After reset, read RAM0
+            rd_bank         <= 1'b0; // After reset, read bank 0
             frame_available <= 1'b0;
         end
         else begin
@@ -240,119 +242,64 @@ module double_framebuffer_sdp_IR #(
         end
     end
 
+     // ========================================================================
+    // Single double-depth RAM
     // ========================================================================
-    // RAM write and read enables
-    // ========================================================================
-
-    logic ram0_wr_en;
-    logic ram1_wr_en;
-    logic ram0_rd_en;
-    logic ram1_rd_en;
-
-    // The capture module samples wr_allow at the beginning of a camera frame
-    // and generates wr_valid only when that complete frame is authorized.
-    //
-    // Therefore the RAM write enables depend on wr_valid and wr_bank.
-    // wr_allow is not checked again for every pixel, avoiding interruption of
-    // an already authorized frame if rd_bank changes asynchronously.
-    assign ram0_wr_en = wr_valid && (wr_bank == 1'b0);
-    assign ram1_wr_en = wr_valid && (wr_bank == 1'b1);
-
-    // Only the framebuffer selected by rd_bank receives the HDMI read request.
-    assign ram0_rd_en = rd_req && (rd_bank == 1'b0);
-    assign ram1_rd_en = rd_req && (rd_bank == 1'b1);
-
-    // ========================================================================
-    // RAM outputs
+    //   bank 0 -> addresses 0         ... FRAME_PIX-1
+    //   bank 1 -> addresses FRAME_PIX ... 2*FRAME_PIX-1
+    // The bank bit now selects an address
+    // offset instead of one of two RAM instances.
     // ========================================================================
 
-    logic [7:0] ram0_dout;
-    logic [7:0] ram1_dout;
+    localparam int RAM_DEPTH     = 2 * FRAME_PIX;
+    localparam int RAM_ADDR_BITS = $clog2(RAM_DEPTH);   // VIS: 16, IR: 14
 
-    // Gowin_SDP read output is synchronous.
-    //
-    // The selected bank and the read-request signal are delayed by one rd_clk
-    // cycle so they remain aligned with the corresponding RAM output.
-    logic rd_bank_d;
+    localparam logic [RAM_ADDR_BITS-1:0] BANK1_BASE = RAM_ADDR_BITS'(FRAME_PIX);
+
+    logic [RAM_ADDR_BITS-1:0] ram_wr_addr;
+    logic [RAM_ADDR_BITS-1:0] ram_rd_addr;
+
+    // wr_bank changes only after a complete frame, rd_bank only at
+    // rd_swap_point: the offset is constant during a whole frame.
+    assign ram_wr_addr = RAM_ADDR_BITS'(wr_addr) + (wr_bank ? BANK1_BASE : '0);
+    assign ram_rd_addr = RAM_ADDR_BITS'(rd_addr) + (rd_bank ? BANK1_BASE : '0);
+
+    // wr_valid is generated only for frames authorized by wr_allow
+    logic ram_wr_en;
+    logic ram_rd_en;
+
+    assign ram_wr_en = wr_valid;
+    assign ram_rd_en = rd_req;
+
+    // Synchronous RAM: data valid one rd_clk cycle after rd_req.
+    // One RAM -> no output multiplexer needed.
     logic rd_req_d;
 
     always_ff @(posedge rd_clk or negedge rst_n) begin
-        if (!rst_n) begin
-            rd_bank_d <= 1'b0;
-            rd_req_d  <= 1'b0;
-        end
-        else begin
-            // If a pixel is requested during the current cycle, the output
-            // becomes valid during the next rd_clk cycle.
+        if (!rst_n)
+            rd_req_d <= 1'b0;
+        else
             rd_req_d <= rd_req;
-
-            // Record which RAM was selected for the current read request.
-            // The delayed value selects the correct synchronous RAM output.
-            if (rd_req) begin
-                rd_bank_d <= rd_bank;
-            end
-        end
     end
 
-    // rd_valid is asserted one cycle after rd_req.
     assign rd_valid = rd_req_d;
 
-    // Select the RAM output corresponding to the delayed read-bank value.
-    always_comb begin
-        if (rd_bank_d == 1'b0)
-            rd_data = ram0_dout;
-        else
-            rd_data = ram1_dout;
-    end
+    Gowin_SDP_IR ram_inst (
+        .dout   (rd_data),
 
-    // ========================================================================
-    // Gowin SDP RAM 0
-    //
-    // Port A: camera write port
-    // Port B: HDMI read port
-    // ========================================================================
-
-    Gowin_SDP_IR ram0 (
-        .dout   (ram0_dout),     // Output [7:0]
-
-        // Write port
+        // Write port (camera)
         .clka   (wr_clk),
-        .cea    (ram0_wr_en),
-        .reseta (~rst_n),        // RAM reset active high
-        .ada    (wr_addr),
+        .cea    (ram_wr_en),
+        .reseta (~rst_n),
+        .ada    (ram_wr_addr),
         .din    (wr_data),
 
-        // Read port
+        // Read port (HDMI)
         .clkb   (rd_clk),
-        .ceb    (ram0_rd_en),
-        .resetb (~rst_n),        // RAM reset active high
+        .ceb    (ram_rd_en),
+        .resetb (~rst_n),
         .oce    (1'b1),
-        .adb    (rd_addr)
-    );
-
-    // ========================================================================
-    // Gowin SDP RAM 1
-    //
-    // Port A: camera write port
-    // Port B: HDMI read port
-    // ========================================================================
-
-    Gowin_SDP_IR ram1 (
-        .dout   (ram1_dout),     // Output [7:0]
-
-        // Write port
-        .clka   (wr_clk),
-        .cea    (ram1_wr_en),
-        .reseta (~rst_n),        // RAM reset active high
-        .ada    (wr_addr),
-        .din    (wr_data),
-
-        // Read port
-        .clkb   (rd_clk),
-        .ceb    (ram1_rd_en),
-        .resetb (~rst_n),        // RAM reset active high
-        .oce    (1'b1),
-        .adb    (rd_addr)
+        .adb    (ram_rd_addr)
     );
 
 endmodule

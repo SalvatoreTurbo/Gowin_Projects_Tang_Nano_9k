@@ -7,7 +7,7 @@
 // - SPI data reception from VIGIL80
 // - 16-bit thermal pixel to 8-bit grayscale conversion
 // - double framebuffer logic
-// - two Gowin_SDP RAM instances
+// - one double-depth Gowin_SDP_IR RAM (12800 x 8)
 // - read interface for HDMI renderer
 //
 // VIGIL80 frame:
@@ -22,7 +22,7 @@ module vigil80_ir_manager #(
     parameter int FOOTER_WORDS  = 23,
     parameter int TOTAL_WORDS   = FRAME_PIX + FOOTER_WORDS,
 
-    // Gowin_SDP IP configured as 6400 x 8, address [12:0]
+    // Gowin_SDP_IR configured as 12800 x 8 (2 frames), address [13:0]
     //parameter int RAM_ADDR_BITS = $clog2(FRAME_PIX),  //dipende dal numero di pixel real
     parameter int ADDR_BITS     = $clog2(FRAME_PIX),      //non utile
 
@@ -98,7 +98,7 @@ module vigil80_ir_manager #(
     );
 
     // ========================================================================
-    // 2. Double framebuffer with two Gowin_SDP RAMs
+    // 2. Double framebuffer in one double-depth Gowin_SDP_IR RAM
     // ========================================================================
 
     double_framebuffer_sdp_IR #(

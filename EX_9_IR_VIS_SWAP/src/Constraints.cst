@@ -34,6 +34,9 @@ IO_PORT "tmds_clk_p" IO_TYPE=LVCMOS33D PULL_MODE=NONE DRIVE=8;
 IO_LOC  "rst_n" 3;
 IO_PORT "rst_n" IO_TYPE=LVCMOS18 PULL_MODE=UP;
 
+IO_LOC  "debug_sel" 4;
+IO_PORT "debug_sel" IO_TYPE=LVCMOS18 PULL_MODE=UP;
+
 
 // ============================================================================
 // INPUT CLOCK 27 MHz

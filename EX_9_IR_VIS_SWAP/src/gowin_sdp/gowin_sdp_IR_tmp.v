@@ -1,17 +1,17 @@
 //Copyright (C)2014-2026 Gowin Semiconductor Corporation.
 //All rights reserved.
 //File Title: Template file for instantiation
-//Tool Version: V1.9.12.02_SP1 (64-bit)
+//Tool Version: V1.9.12.04 (64-bit)
 //IP Version: 1.0
 //Part Number: GW1NR-LV9QN88PC6/I5
 //Device: GW1NR-9
 //Device Version: C
-//Created Time: Thu Aug  6 12:40:50 2026
+//Created Time: Wed Nov  4 17:42:03 2026
 
 //Change the instance name and port connections to the signal names
 //--------Copy here to design--------
 
-    Gowin_SDP_VIS your_instance_name(
+    Gowin_SDP_IR your_instance_name(
         .dout(dout), //output [7:0] dout
         .clka(clka), //input clka
         .cea(cea), //input cea
@@ -20,9 +20,9 @@
         .ceb(ceb), //input ceb
         .resetb(resetb), //input resetb
         .oce(oce), //input oce
-        .ada(ada), //input [14:0] ada
+        .ada(ada), //input [13:0] ada
         .din(din), //input [7:0] din
-        .adb(adb) //input [14:0] adb
+        .adb(adb) //input [13:0] adb
     );
 
 //--------Copy end-------------------

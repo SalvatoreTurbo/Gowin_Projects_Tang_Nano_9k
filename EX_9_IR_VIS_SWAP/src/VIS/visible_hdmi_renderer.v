@@ -1,8 +1,8 @@
 // ============================================================================
-// MODULE: visible_hdmi_renderer_rgb332
+// MODULE: visible_hdmi_renderer
 // DESCRIPTION:
-// Reads RGB332 pixels from the visible-camera framebuffer and converts them
-// to RGB888 for HDMI.
+// Reads 8-bit pixels from VIS framebuffer VIS and convert it to RGB888 to HDMI:
+// grayscale (VIS_Y8 = 1) or RGB332 conversion (VIS_Y8 = 0).
 //
 // Default configuration:
 // - framebuffer: 160x120
@@ -10,7 +10,7 @@
 // - SCALE = 4
 // ============================================================================
 
-module visible_hdmi_renderer_rgb332 #(
+module visible_hdmi_renderer #(
     parameter int H_ACTIVE  = 640,
     parameter int V_ACTIVE  = 480,
 
@@ -22,7 +22,8 @@ module visible_hdmi_renderer_rgb332 #(
     parameter int SCALE     = 4,   //Each pixel in the camera will be replicated 4 times vertically and 4 times horizontally
 
     parameter int FRAME_PIX = IMG_W * IMG_H,
-    parameter int ADDR_BITS = $clog2(FRAME_PIX)
+    parameter int ADDR_BITS = $clog2(FRAME_PIX),
+    parameter bit VIS_Y8    = 1'b1   // 1: grayscale R=G=B=Y, 0: RGB332 -> RGB888
 )(
     input  logic clk_pixel,
     input  logic rst_n,
@@ -118,9 +119,9 @@ module visible_hdmi_renderer_rgb332 #(
             in_image_area_d <= in_image_area;
 
             if (in_image_area_d && rd_valid) begin
-                red   <= converted_red;
-                green <= converted_green;
-                blue  <= converted_blue;
+                red   <= VIS_Y8 ? rd_pixel : converted_red;
+                green <= VIS_Y8 ? rd_pixel : converted_green;
+                blue  <= VIS_Y8 ? rd_pixel : converted_blue;
             end
             else begin    //out of image : black
                 red   <= 8'd0;

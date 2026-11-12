@@ -74,11 +74,11 @@ IO_LOC  "ov_pclk" 35;
 IO_PORT "ov_pclk" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
 // Adafruit VS: vertical/frame synchronization
-IO_LOC  "ov_vsync" 34;
+IO_LOC  "ov_vsync" 42;
 IO_PORT "ov_vsync" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
 // Adafruit HS: horizontal reference / valid line
-IO_LOC  "ov_href" 40;
+IO_LOC  "ov_href" 41;
 IO_PORT "ov_href" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
 
@@ -89,28 +89,28 @@ IO_PORT "ov_href" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 // They are mapped in ascending order to ov_data[0] through ov_data[7].
 // ============================================================================
 
-IO_LOC  "ov_data[0]" 41;   // Adafruit D2
+IO_LOC  "ov_data[0]" 25;   // Adafruit D2
 IO_PORT "ov_data[0]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_data[1]" 42;   // Adafruit D3
+IO_LOC  "ov_data[1]" 26;   // Adafruit D3
 IO_PORT "ov_data[1]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_data[2]" 25;   // Adafruit D4
+IO_LOC  "ov_data[2]" 27;   // Adafruit D4
 IO_PORT "ov_data[2]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_data[3]" 26;   // Adafruit D5
+IO_LOC  "ov_data[3]" 28;   // Adafruit D5
 IO_PORT "ov_data[3]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_data[4]" 27;   // Adafruit D6
+IO_LOC  "ov_data[4]" 29;   // Adafruit D6
 IO_PORT "ov_data[4]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_data[5]" 28;   // Adafruit D7
+IO_LOC  "ov_data[5]" 30;   // Adafruit D7
 IO_PORT "ov_data[5]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_data[6]" 29;   // Adafruit D8
+IO_LOC  "ov_data[6]" 33;   // Adafruit D8
 IO_PORT "ov_data[6]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_data[7]" 30;   // Adafruit D9
+IO_LOC  "ov_data[7]" 34;   // Adafruit D9
 IO_PORT "ov_data[7]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
 
@@ -119,12 +119,13 @@ IO_PORT "ov_data[7]" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 //
 // The Adafruit breakout has external pull-up resistors.
 // The SystemVerilog SCCB master drives these ports as open-drain.
+// SDA is on pin 31 (IOB15A): a plain GPIO with no configuration function.
 // ============================================================================
 
 IO_LOC  "ov_scl" 51;
 IO_PORT "ov_scl" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
-IO_LOC  "ov_sda" 57;
+IO_LOC  "ov_sda" 31;
 IO_PORT "ov_sda" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 
 
@@ -135,7 +136,7 @@ IO_PORT "ov_sda" IO_TYPE=LVCMOS33 PULL_MODE=NONE;
 // PD -> ov_pwdn:    active high
 // ============================================================================
 
-IO_LOC  "ov_reset_n" 33;
+IO_LOC  "ov_reset_n" 40;
 IO_PORT "ov_reset_n" IO_TYPE=LVCMOS33 PULL_MODE=NONE DRIVE=8;
 
 IO_LOC  "ov_pwdn" 39;

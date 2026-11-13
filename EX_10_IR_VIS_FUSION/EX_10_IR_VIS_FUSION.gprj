@@ -23,7 +23,7 @@
         <File path="src/gowin_rpll/gowin_rpll.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_sdp/gowin_sdp_IR.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_sdp/gowin_sdp_VIS.v" type="file.verilog" enable="1"/>
-        <File path="src/image_fusion_fusion_top.v" type="file.verilog" enable="1"/>
+        <File path="src/image_fusion_top.v" type="file.verilog" enable="1"/>
         <File path="src/thermal_blend_controller.v" type="file.verilog" enable="1"/>
         <File path="src/thermal_false_color.v" type="file.verilog" enable="1"/>
         <File path="src/Constraints.cst" type="file.cst" enable="1"/>

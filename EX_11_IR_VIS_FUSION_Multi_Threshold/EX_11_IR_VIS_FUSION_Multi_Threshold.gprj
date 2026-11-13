@@ -1,0 +1,33 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW1NR-9C" pn="GW1NR-LV9QN88PC6/I5">gw1nr9c-004</Device>
+    <FileList>
+        <File path="src/HDMI/TMDS_encoder.v" type="file.verilog" enable="1"/>
+        <File path="src/HDMI/rgb332_to_rgb888.v" type="file.verilog" enable="1"/>
+        <File path="src/HDMI/serializer_10_1.v" type="file.verilog" enable="1"/>
+        <File path="src/HDMI/video_timing.v" type="file.verilog" enable="1"/>
+        <File path="src/IR/double_framebuffer_sdp_IR.v" type="file.verilog" enable="1"/>
+        <File path="src/IR/vigil80_ir_manager.v" type="file.verilog" enable="1"/>
+        <File path="src/IR/vigil80_spi_receiver_16to8.v" type="file.verilog" enable="1"/>
+        <File path="src/VIS/double_framebuffer_sdp_VIS.v" type="file.verilog" enable="1"/>
+        <File path="src/VIS/ov5640_controller.v" type="file.verilog" enable="1"/>
+        <File path="src/VIS/ov5640_dvp_capture.v" type="file.verilog" enable="1"/>
+        <File path="src/VIS/ov5640_visible_manager.v" type="file.verilog" enable="1"/>
+        <File path="src/VIS/sccb_write_master.v" type="file.verilog" enable="1"/>
+        <File path="src/alpha_blender.v" type="file.verilog" enable="1"/>
+        <File path="src/button_handler.v" type="file.verilog" enable="1"/>
+        <File path="src/fusion_coordinate_mapper.v" type="file.verilog" enable="1"/>
+        <File path="src/fusion_pipeline.v" type="file.verilog" enable="1"/>
+        <File path="src/gowin_rpll/gowin_rpll.v" type="file.verilog" enable="1"/>
+        <File path="src/gowin_sdp/gowin_sdp_IR.v" type="file.verilog" enable="1"/>
+        <File path="src/gowin_sdp/gowin_sdp_VIS.v" type="file.verilog" enable="1"/>
+        <File path="src/image_fusion_top.v" type="file.verilog" enable="1"/>
+        <File path="src/thermal_false_color.v" type="file.verilog" enable="1"/>
+        <File path="src/thermal_multilevel_controller.v" type="file.verilog" enable="1"/>
+        <File path="src/Constraints.cst" type="file.cst" enable="1"/>
+        <File path="src/Time_Constraints.sdc" type="file.sdc" enable="1"/>
+    </FileList>
+</Project>
